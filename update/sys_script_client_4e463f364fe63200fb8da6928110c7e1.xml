@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field>active</field>
+        <global>true</global>
+        <messages/>
+        <name>cscSetResolutionGroup1OrNot</name>
+        <order/>
+        <script><![CDATA[function onSubmit() {
+     var action = g_form.getActionName();
+	 //alert('You pressed ' + action); 
+	var fieldState = g_form.getControl('state');
+	
+	if(fieldState == null){
+		
+		//strange! should not be null but ok nothing to do...
+	}else{
+		
+		if(fieldState.changed){
+			//alert("oh yes it changed! New value: " + g_form.getValue('state') + "!!!");
+			if(g_form.getValue('state') == '15'){
+				//put to assignement group value
+				var assignment_groupValue = g_form.getValue('assignment_group');
+				if(assignment_groupValue!=null){
+					g_form.setValue('u_reference_2', assignment_groupValue);
+				}else{
+					//alert('strange! Assignment Group should not be empty!!');
+				}
+			}else{
+				//empty it!
+				g_form.setValue('u_reference_2', null);
+			}
+		}else{
+			//alert("ok our field did not change");
+		}
+	}
+	
+   
+}]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2017-05-09 19:40:02</sys_created_on>
+        <sys_customer_update>true</sys_customer_update>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>4e463f364fe63200fb8da6928110c7e1</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>cscSetResolutionGroup1OrNot</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
+        <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
+        <sys_update_name>sys_script_client_4e463f364fe63200fb8da6928110c7e1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2017-05-09 20:21:20</sys_updated_on>
+        <table>x_58872_needit_needit</table>
+        <type>onSubmit</type>
+        <ui_type>0</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>
