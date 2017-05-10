@@ -12,20 +12,39 @@ CIInfo.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
 	amountSameClass: function(){
 		var ret = "uninitalized";
 		var ci_id = this.getParameter('sysparm_ci_id');
-		var cmdb = new GlideRecord('cmdb');
+		var cmdb = new GlideRecord('cmdb_ci');
 		if(cmdb!=null && ci_id!=null){
-			cmdb.addQuery("sys_id",ci_id);
-			cmdb.query();
-			if(cmdb.hasNext()){
-				cmdb.next();
+			//cmdb.addQuery("sys_id",ci_id);
+			//cmdb.query();
+			//if(cmdb.hasNext()){
+			if(cmdb.get("sys_id",ci_id)){
+				//cmdb.next();
 				var sys_class_name = cmdb.sys_class_name;
 				if(sys_class_name!=null){
-					var cmdb2 = new GlideRecord('cmdb');
-					//we assume, if we just got a value here, that this value is valid!
+					//version 1 (not good)
+					/*var cmdb2 = new GlideRecord('cmdb');
 					cmdb2.addQuery("sys_class_name", sys_class_name);
 					cmdb2.query();
-					ret = "Total " + cmdb2.getRowCount() + " CIs of the same class (" + sys_class_name + ") exist in the system";
-					//ret = "ok, we have a sys_class_name: '" + sys_class_name + "'!";
+					ret = "Total " + cmdb2.getRowCount() + " CIs of the same class (" + sys_class_name + ") exist in the system";*/
+					
+					//version 2 (better, and I'm sure we can relay on the fact that the class name will exist
+					/*var cmdb3 = new GlideRecord(cmdb.sys_class_name);
+					cmdb3.query();
+					ret = "Total " + cmdb3.getRowCount() + 
+						" CIs of that class with id '" + cmdb.sys_class_name + "' exist in the system";*/
+					
+					
+					//version 3 (optimizing the aggregation)
+					var count = new GlideAggregate(cmdb.sys_class_name);
+					count.addAggregate('COUNT');
+					count.query();
+					if (count.next()){
+					   ret = "Total " + count.getAggregate('COUNT') + 
+						" CIs of that same class (class id '" + cmdb.sys_class_name + "') exist in the system.";
+					}else{
+						ret = "Could not cound cis with class id '"+ cmdb.sys_class_name+"'!";
+					}
+					
 				}else{
 					ret = "ah!! no class name for ci with id '" + ci_id + "'!";
 				}
@@ -33,7 +52,6 @@ CIInfo.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
 				ret = "ah! no record with sys_id '" + ci_id + "'!";
 			}
 		}else{
-			
 			if(target==null){
 				ret = "table 'hange_request' not found";
 			}else if(ci_id == null){
@@ -41,9 +59,7 @@ CIInfo.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
 			}else{
 				
 			}
-			
 		}
-		
 		return ret;
 	}
 });]]></script>
@@ -52,7 +68,7 @@ CIInfo.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
         <sys_created_on>2017-05-09 21:28:21</sys_created_on>
         <sys_customer_update>true</sys_customer_update>
         <sys_id>0a9d08cb4fe63200fb8da6928110c717</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>25</sys_mod_count>
         <sys_name>CIInfo</sys_name>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
         <sys_policy>read</sys_policy>
@@ -60,6 +76,6 @@ CIInfo.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sys_script_include_0a9d08cb4fe63200fb8da6928110c717</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2017-05-09 22:36:30</sys_updated_on>
+        <sys_updated_on>2017-05-10 09:13:50</sys_updated_on>
     </sys_script_include>
 </record_update>
